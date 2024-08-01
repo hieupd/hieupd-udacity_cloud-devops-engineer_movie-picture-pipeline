@@ -1,0 +1,75 @@
+name: Frontend Continuous Integration
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'starter/frontend/**'
+
+defaults:
+  run:
+    working-directory: starter/frontend
+
+jobs:
+  run-lint-job:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check out repository
+      uses: actions/checkout@v3
+
+    - name: Use Node.js 16
+      uses: actions/setup-node@v3
+      with:
+        node-version: 16
+
+    - name: Clean install dependencies
+      run: npm ci
+
+    - name: Run linting jobs
+      run: npm run lint --fix
+
+  run-test-job:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check out repository
+      uses: actions/checkout@v3
+
+    - name: Use Node.js 16
+      uses: actions/setup-node@v3
+      with:
+        node-version: 16
+
+    - name: Clean install dependencies
+      run: npm ci
+
+    - name: Run testing jobs
+      run: npm run test
+      continue-on-error: false
+
+  post-build-job:
+    needs: [run-lint-job, run-test-job]
+    env:
+      REACT_APP_MOVIE_API_URL: ${{ secrets.REACT_APP_MOVIE_API_URL }}
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check out repository
+      uses: actions/checkout@v3
+
+    - name: Use Node.js 16
+      uses: actions/setup-node@v3
+      with:
+        node-version: 16
+
+    - name: Clean install dependencies
+      run: npm ci
+
+    - name: Run testing jobs
+      run: npm run test
+      continue-on-error: false
+
+    - name: Build Docker image
+      run: docker build --build-arg REACT_APP_MOVIE_API_URL=${{env.REACT_APP_MOVIE_API_URL}} -t fe-movies-picture .
