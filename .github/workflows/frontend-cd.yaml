@@ -95,7 +95,7 @@ jobs:
     - name: Deploy Kubernetes manifests
       env:
         REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        $: frontend
+        REPOSITORY: frontend
         NEW_IMAGE_TAG: ${{ github.sha }}
       run: |
         cd k8s
