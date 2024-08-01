@@ -1,4 +1,4 @@
-name: Frontend Continuous Deployment
+name: Frontend CD 
 
 on:
   workflow_dispatch:
@@ -93,12 +93,14 @@ jobs:
 
     - name: Deploy Kubernetes manifests
       env:
-        ECR_REPO_URL: $REGISTRY/$REPOSITORY
+        ECR_REPOSITORY_URL: $REGISTRY/$REPOSITORY
         NEW_IMAGE_TAG: ${{ github.sha }}
       run: |
         cd k8s
-        aws eks --region us-east-1 update-kubeconfig --name cluster
-        kustomize edit set image frontend=$ECR_REPO_URL:$NEW_IMAGE_TAG
+        aws sts get-caller-identity
+        aws eks --region $AWS_REGION update-kubeconfig --name cluster
+        kubectl config current-context
+        kustomize edit set image frontend=$ECR_REPOSITORY_URL:$NEW_IMAGE_TAG
         kustomize build | kubectl apply -f -
         kubectl get pods
         kubectl get svc
