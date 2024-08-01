@@ -111,7 +111,7 @@ jobs:
         aws sts get-caller-identity
         aws eks --region $AWS_REGION update-kubeconfig --name cluster
         kubectl config current-context
-        kustomize edit set image backend=$REGISTRY/REPOSITORY:$IMAGE_TAG
+        kustomize edit set image backend=$REGISTRY/$REPOSITORY:$IMAGE_TAG
         kustomize build | kubectl apply -f -
         kubectl get pods
         kubectl get svc
