@@ -13,7 +13,7 @@ defaults:
     working-directory: starter/frontend
 
 jobs:
-  run-lint:
+  run-lint-job:
     runs-on: ubuntu-latest
 
     steps:
@@ -31,7 +31,7 @@ jobs:
     - name: Run linting jobs
       run: npm run lint --fix
 
-  run-test:
+  test-job:
     runs-on: ubuntu-latest
 
     steps:
@@ -51,7 +51,7 @@ jobs:
       continue-on-error: false
 
   build-and-deploy:
-    needs: [run-lint-job, run-test-job]
+    needs: [run-lint, run-test]
     env:
       REACT_APP_MOVIE_API_URL: ${{ secrets.REACT_APP_MOVIE_API_URL }}
     runs-on: ubuntu-latest
