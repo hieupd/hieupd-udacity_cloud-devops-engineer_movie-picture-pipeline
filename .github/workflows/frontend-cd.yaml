@@ -101,6 +101,6 @@ jobs:
         aws eks --region $AWS_REGION update-kubeconfig --name cluster
         kubectl config current-context
         kustomize edit set image frontend=$ECR_REPOSITORY_URL:$NEW_IMAGE_TAG
-        kustomize build | kubectl apply -f --validate=false
+        kustomize build | kubectl apply -f - --validate=false
         kubectl get pods
         kubectl get svc
