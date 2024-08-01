@@ -13,7 +13,7 @@ defaults:
     working-directory: starter/frontend
 
 jobs:
-  run-lint-job:
+  run-lint:
     runs-on: ubuntu-latest
 
     steps:
@@ -31,7 +31,7 @@ jobs:
     - name: Run linting jobs
       run: npm run lint --fix
 
-  run-test-job:
+  run-test:
     runs-on: ubuntu-latest
 
     steps:
@@ -50,7 +50,7 @@ jobs:
       run: npm run test
       continue-on-error: false
 
-  post-build-job:
+  build-and-deploy:
     needs: [run-lint-job, run-test-job]
     env:
       REACT_APP_MOVIE_API_URL: ${{ secrets.REACT_APP_MOVIE_API_URL }}
@@ -64,6 +64,7 @@ jobs:
       with:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-session-token: ${{secrets.AWS_SESSION_TOKEN}}
         aws-region: ${{ secrets.AWS_REGION }}
 
     - name: Use Node.js 16
