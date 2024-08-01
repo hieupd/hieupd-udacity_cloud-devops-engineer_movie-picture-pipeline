@@ -13,7 +13,7 @@ defaults:
     working-directory: starter/frontend
 
 jobs:
-  run-lint-job:
+  run-lint:
     runs-on: ubuntu-latest
 
     steps:
@@ -31,7 +31,7 @@ jobs:
     - name: Run linting jobs
       run: npm run lint --fix
 
-  test-job:
+  run-test:
     runs-on: ubuntu-latest
 
     steps:
