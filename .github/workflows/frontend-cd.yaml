@@ -94,14 +94,15 @@ jobs:
 
     - name: Deploy Kubernetes manifests
       env:
-        ECR_REPO_URL: $REGISTRY/$REPOSITORY
+        REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        $: frontend
         NEW_IMAGE_TAG: ${{ github.sha }}
       run: |
         cd k8s
         aws sts get-caller-identity
         aws eks --region $AWS_REGION update-kubeconfig --name cluster
         kubectl config current-context
-        kustomize edit set image frontend=$ECR_REPO_URL:$NEW_IMAGE_TAG
+        kustomize edit set image frontend=$REGISTRY/$REPOSITORY:$NEW_IMAGE_TAG
         kustomize build | kubectl apply -f -
         kubectl get pods
         kubectl get svc
