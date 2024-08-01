@@ -72,4 +72,4 @@ jobs:
       continue-on-error: false
 
     - name: Build Docker image
-      run: docker build --build-arg REACT_APP_MOVIE_API_URL=${{env.REACT_APP_MOVIE_API_URL}} -t fe-movies-picture .
+      run: docker build --build-arg=REACT_APP_MOVIE_API_URL=${{ secrets.REACT_APP_MOVIE_API_URL }} -t fe-movies-picture .
